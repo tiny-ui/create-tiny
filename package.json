@@ -8,10 +8,11 @@
 		"node": "^14.18.0 || >=16.0.0"
 	},
 	"scripts": {
-		"build": "esbuild index.js --bundle --outfile=out.js",
+		"build": "esbuild index.ts --bundle --outfile=out.js",
 		"dev": "npm run build && node out.js"
 	},
-	"dependencies": {
+	"devDependencies": {
+		"typescript": "^4.8.4",
 		"esbuild": "^0.15.10"
 	}
 }

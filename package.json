@@ -1,0 +1,16 @@
+{
+	"name": "create-tiny",
+	"version": "0.1.1",
+	"bin": {
+		"create-tiny": "out.js"
+	},
+	"engines": {
+		"node": "^14.18.0 || >=16.0.0"
+	},
+	"scripts": {
+		"build": "esbuild index.js --bundle --outfile=out.js"
+	},
+	"dependencies": {
+		"esbuild": "^0.15.10"
+	}
+}

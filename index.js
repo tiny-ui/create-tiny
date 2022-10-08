@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-console.log('start')
+console.log('before')
 
 async function init() {
     console.log('init')

@@ -50,7 +50,7 @@ function emptyDir(dir) {
 }
 
 async function init() {
-    console.log('Tiny.js')
+    console.log('\nTiny.js\n')
 
     let targetDir;
     const defaultProjectName = 'tiny-project'
@@ -153,7 +153,14 @@ async function init() {
         renderTemplate(templateDir, root)
     }
 
+    // Render base template
     render('base')
+
+    // Render code template.
+    // prettier-ignore
+    const codeTemplate =
+        (needsTypeScript ? 'typescript-' : '') + 'default'
+    render(`code/${codeTemplate}`)
 
     // Instructions:
     // Supported package managers: pnpm > yarn > npm

@@ -9,6 +9,7 @@ import { red, green, bold } from 'kolorist'
 import { postOrderDirectoryTraverse, preOrderDirectoryTraverse } from './utils/directoryTraverse'
 import renderTemplate from './utils/renderTemplate'
 import getCommand from './utils/getCommand'
+import generateReadme from './utils/generateReadme'
 
 function isValidPackageName(projectName) {
     return /^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/.test(projectName)
@@ -158,6 +159,16 @@ async function init() {
     // Supported package managers: pnpm > yarn > npm
     const userAgent = process.env.npm_config_user_agent ?? ''
     const packageManager = /pnpm/.test(userAgent) ? 'pnpm' : /yarn/.test(userAgent) ? 'yarn' : 'npm'
+
+    // README generation
+    // todo complete
+    fs.writeFileSync(
+        path.resolve(root, 'README.md'),
+        generateReadme({
+            projectName: result.projectName ?? result.packageName ?? defaultProjectName,
+            packageManager
+        })
+    )
 
     console.log(`\nDone. Now run:\n`)
     if (root !== cwd) {

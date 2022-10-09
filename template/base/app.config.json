@@ -1,0 +1,43 @@
+{
+  "runtime": {
+    "baseWidth": 750,
+    "launcherRouter": "hello",
+    "pages": [
+      {
+        "name": "hello",
+        "router": "hello",
+        "source": "./src/page/hello/index.js"
+      }
+    ]
+  },
+  "build": {
+    "appName": {
+      "default": "$PROJECT_NAME"
+    },
+    "applicationId": "com.sunmi.elephant.$PACKAGE_NAME",
+    "dependencies": [],
+    "keystore": {
+      "keyAlias": "debug",
+      "keyPassword": "com.sunmi.elephant.debug",
+      "storeFilePath": "./android/mock/signing/debug.keystore",
+      "storePassword": "com.sunmi.elephant.debug"
+    },
+    "launcherIcon": [
+      {
+        "icon": "./android/mock/ic_launcher.png",
+        "resolution": "xxxhdpi"
+      }
+    ],
+    "splash": {
+      "background": [
+        {
+          "resolution": "xxxhdpi",
+          "src": "./android/mock/splash.png"
+        }
+      ]
+    },
+    "versionCode": 1,
+    "versionName": "0.0.1"
+  },
+  "projectType": "javascript"
+}

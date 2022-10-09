@@ -1,7 +1,14 @@
 #!/usr/bin/env node
+
 import * as fs from 'node:fs'
+import * as path from 'node:path'
+
 import prompts from 'prompts'
 import { red, green, bold } from 'kolorist'
+
+import { postOrderDirectoryTraverse, preOrderDirectoryTraverse } from './utils/directoryTraverse'
+import renderTemplate from './utils/renderTemplate'
+import getCommand from './utils/getCommand'
 
 function isValidPackageName(projectName) {
     return /^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/.test(projectName)
@@ -25,11 +32,20 @@ function canSkipEmptying(dir: string) {
     if (files.length === 0) {
         return true
     }
-    if (files.length === 1 && files[0] === '.git') {
-        return true
+
+    return files.length === 1 && files[0] === '.git';
+}
+
+function emptyDir(dir) {
+    if (!fs.existsSync(dir)) {
+        return
     }
 
-    return false
+    postOrderDirectoryTraverse(
+        dir,
+        (dir) => fs.rmdirSync(dir),
+        (file) => fs.unlinkSync(file)
+    )
 }
 
 async function init() {
@@ -41,12 +57,13 @@ async function init() {
     let result: {
         projectName?: string
         shouldOverwrite?: string
+        packageName?: string
         needsTypeScript?: string
         needsJsx?: string
     } = {}
 
     try {
-        await prompts([
+        result = await prompts([
             {
                 name: 'projectName',
                 type: 'text',
@@ -104,6 +121,51 @@ async function init() {
         console.log(e.message)
         process.exit(1)
     }
+
+    console.log(result)
+
+    const {
+        projectName,
+        shouldOverwrite,
+        packageName = projectName ?? defaultProjectName,
+        needsTypeScript,
+        needsJsx
+    } = result
+
+    const cwd = process.cwd()
+    const root = path.join(cwd, targetDir)
+
+    if (fs.existsSync(root) && shouldOverwrite) {
+        emptyDir(root)
+    } else if (!fs.existsSync(root)) {
+        fs.mkdirSync(root)
+    }
+
+    console.log(`\nScaffolding project in ${root}...`)
+
+    const pkg = { name: packageName, version: '0.0.0' }
+    fs.writeFileSync(path.resolve(root, 'package.json'), JSON.stringify(pkg, null, 2))
+
+    const templateRoot = path.resolve(__dirname, 'template')
+    const render = function render(templateName) {
+        const templateDir = path.resolve(templateRoot, templateName)
+        renderTemplate(templateDir, root)
+    }
+
+    render('base')
+
+    // Instructions:
+    // Supported package managers: pnpm > yarn > npm
+    const userAgent = process.env.npm_config_user_agent ?? ''
+    const packageManager = /pnpm/.test(userAgent) ? 'pnpm' : /yarn/.test(userAgent) ? 'yarn' : 'npm'
+
+    console.log(`\nDone. Now run:\n`)
+    if (root !== cwd) {
+        console.log(`  ${bold(green(`cd ${path.relative(cwd, root)}`))}`)
+    }
+    console.log(`  ${bold(green(getCommand(packageManager, 'install')))}`)
+    console.log(`  ${bold(green(getCommand(packageManager, 'dev')))}`)
+    console.log()
 }
 
 init().catch((e) => {

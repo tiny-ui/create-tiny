@@ -123,8 +123,6 @@ async function init() {
         process.exit(1)
     }
 
-    console.log(result)
-
     const {
         projectName,
         shouldOverwrite,
@@ -156,10 +154,15 @@ async function init() {
     // Render base template
     render('base')
 
+    // Add configs.
+    if (needsJsx) {
+        render('config/jsx')
+    }
+
     // Render code template.
     // prettier-ignore
     const codeTemplate =
-        (needsTypeScript ? 'typescript-' : '') + 'default'
+        (needsTypeScript ? 'typescript-' : '') + 'default' + (needsJsx ? '-jsx' : '')
     render(`code/${codeTemplate}`)
 
     // Instructions:

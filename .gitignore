@@ -8,3 +8,5 @@ package-lock.json
 # For WebStorm
 .idea
 .idea/*
+
+.DS_Store

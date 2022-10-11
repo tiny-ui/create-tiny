@@ -1,6 +1,6 @@
 import * as esbuild from 'esbuild'
 import { createServer, request} from "http";
-import { spawn } from 'child_process'
+import { spawn, exec } from 'child_process'
 import { networkInterfaces } from 'os';
 
 const getIp = () =>
@@ -19,7 +19,7 @@ await esbuild.build({
     bundle: true,
     outdir: 'out',
     banner: {
-        // todo websocket support
+        // Todo websocket support if
         js: ` (() => new EventSource("${EVENT_WATCH}").onmessage = () => location.reload())();`,
     },
     watch: {
@@ -75,15 +75,32 @@ esbuild.serve({ servedir: './' }, {}).then((result) => {
         req.pipe(proxyReq, { end: true });
     }).listen(PORT)
 
-    // todo console.error(`Port ${port} was in use.\n`)
+    // Todo console.error(`Port ${port} was in use.\n`)
     const localhost = `http://localhost:${PORT}`
     console.log('\nServing 🍛\n');
     console.log(`Local → ${localhost}\n`);
     console.log(`Network → http://${getIp()}:${PORT}\n`);
 
+    // Open the default browser only if it is not opened yet
     setTimeout(() => {
         const op = { darwin: ['open'], linux: ['xdg-open'], win32: ['cmd', '/c', 'start'] }
         const ptf = process.platform
         if (clients.length === 0) spawn(op[ptf][0], [...[op[ptf].slice(1)], localhost])
-    }, 1000) //open the default browser only if it is not opened yet
+    }, 1000)
+
+    // Install apk to android device.
+    // Todo show tips when command error case, as follows:
+    // 1. adb command not found
+    // 2. adb devices not found
+    // 3. adb devices multiple devices conflicts
+    // 4. adb ... with other exception case.
+    setTimeout( () => {
+        const execute = (command, callback) => exec(command, function(error, stdout, stderr){ callback(stdout); })
+        execute('adb install -t app-debug.apk', (r1) => {
+            console.log('---', 'install: ' + r1)
+            execute('adb shell am start -n com.whl.tinyui.sample/com.whl.tinyui.sample.HotReloadActivity', (r2) => {
+                console.log('---', 'start: ' + r2)
+            })
+        })
+    }, 200)
 })

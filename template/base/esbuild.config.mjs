@@ -89,7 +89,7 @@ esbuild.serve({ servedir: './' }, {}).then((result) => {
     }, 1000)
 
     // Install apk to android device.
-    // Todo show tips when command error case, as follows:
+    // Todo show tips when command error case, such as:
     // 1. adb command not found
     // 2. adb devices not found
     // 3. adb devices multiple devices conflicts

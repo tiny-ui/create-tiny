@@ -10,6 +10,8 @@ const getIp = () =>
 
 const PORT = 3000
 
+const EVENT_WATCH = '/event_watch'
+
 const clients = []
 
 await esbuild.build({
@@ -18,7 +20,7 @@ await esbuild.build({
     outdir: 'out',
     banner: {
         // todo websocket support
-        js: ' (() => new EventSource("http://localhost:8082").onmessage = () => location.reload())();',
+        js: ` (() => new EventSource("${EVENT_WATCH}").onmessage = () => { console.log(1111111); location.reload();})();`,
     },
     watch: {
         onRebuild(error, result) {
@@ -32,11 +34,21 @@ await esbuild.build({
     }
 }).catch(() => process.exit(1))
 
-esbuild.serve({ servedir: './out' }, {}).then((result) => {
+esbuild.serve({ servedir: './' }, {}).then((result) => {
     // The result tells us where esbuild's local server is
     const {host, port} = result
 
     createServer((req, res) => {
+        // For watch to hot reload.
+        if (req.url === EVENT_WATCH) {
+            const client = res.writeHead(200, {
+                'Content-Type': 'text/event-stream',
+                'Cache-Control': 'no-cache',
+                Connection: 'keep-alive'
+            });
+            return clients.push(client)
+        }
+
         const url = {
             hostname: host,
             port: port,
@@ -75,4 +87,3 @@ esbuild.serve({ servedir: './out' }, {}).then((result) => {
         if (clients.length === 0) spawn(op[ptf][0], [...[op[ptf].slice(1)], localhost])
     }, 1000) //open the default browser only if it is not opened yet
 })
-

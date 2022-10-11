@@ -1,12 +1,5 @@
-"use strict";
+const header = document.createElement("h1");
 
-var app = () => {
-    return TinyDOM.createElement("column", {
-        style: {
-            width: "100%",
-            height: "100%",
-        }
-    }, TinyDOM.createElement("text", {}, "hello word"));
-};
+header.innerHTML = "Hello world";
 
-TinyUI.render(app());
+document.body.appendChild(header);

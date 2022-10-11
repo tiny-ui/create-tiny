@@ -6,10 +6,18 @@ export default function generateReadme({
 }) {
   let readme = `# ${projectName}
 
+## Requirements
+
+- Node.js >= 0.10
+- The adb command line tool
+
+You need adb, accessible from your PATH. If you don't have it yet:
+\`\`\`sh
+brew cask install android-platform-tools
+\`\`\`
+
 ## Project Setup
-
 `
-
   let npmScriptsDescriptions = `\`\`\`sh
 ${getCommand(packageManager, 'install')}
 \`\`\`

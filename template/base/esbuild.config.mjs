@@ -20,7 +20,7 @@ await esbuild.build({
     outdir: 'out',
     banner: {
         // todo websocket support
-        js: ` (() => new EventSource("${EVENT_WATCH}").onmessage = () => { console.log(1111111); location.reload();})();`,
+        js: ` (() => new EventSource("${EVENT_WATCH}").onmessage = () => location.reload())();`,
     },
     watch: {
         onRebuild(error, result) {

@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "build": "esbuild src/index.js --bundle --outdir=out",
     "dev": "node esbuild.config.mjs"
   },
   "devDependencies": {

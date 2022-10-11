@@ -95,10 +95,10 @@ esbuild.serve({ servedir: './' }, {}).then((result) => {
     // 3. adb devices multiple devices conflicts
     // 4. adb ... with other exception case.
     setTimeout( () => {
-        const execute = (command, callback) => exec(command, function(error, stdout, stderr){ callback(stdout); })
-        execute('adb install -t app-debug.apk', (r1) => {
+        const cmd = (command, callback) => exec(command, function(error, stdout, stderr){ callback(stdout); })
+        cmd('adb install -t app-debug.apk', (r1) => {
             console.log('---', 'install: ' + r1)
-            execute('adb shell am start -n com.whl.tinyui.sample/com.whl.tinyui.sample.HotReloadActivity', (r2) => {
+            cmd('adb shell am start -n com.whl.tinyui.sample/com.whl.tinyui.sample.HotReloadActivity', (r2) => {
                 console.log('---', 'start: ' + r2)
             })
         })

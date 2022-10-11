@@ -8,7 +8,7 @@ const getIp = () =>
         .flat()
         .find(ip => ip.family === 'IPv4' && !ip.internal).address;
 
-const PORT = 3000
+const PORT = 7000
 
 const EVENT_WATCH = '/event_watch'
 

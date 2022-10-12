@@ -1,6 +1,6 @@
 {
 	"name": "create-tiny",
-	"version": "0.4.3",
+	"version": "0.5.0",
 	"bin": {
 		"create-tiny": "out.js"
 	},
@@ -11,6 +11,9 @@
 		"build": "node ./scripts/build.mjs",
 		"dev": "npm run build && node out.js"
 	},
+	"author": "Harlon Wang <81813780@qq.com>",
+	"license": "MIT",
+	"homepage": "https://github.com/tiny-ui/create-tiny#readme",
 	"devDependencies": {
 		"@types/node": "^18.8.3",
 		"esbuild": "^0.15.10",

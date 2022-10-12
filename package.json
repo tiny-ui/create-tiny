@@ -8,7 +8,7 @@
 		"node": "^14.18.0 || >=16.0.0"
 	},
 	"scripts": {
-		"build": "node ./scripts/build.mjs",
+		"build": "node esbuild_config.mjs",
 		"dev": "npm run build && node out.js"
 	},
 	"description": "The way to start a tiny project",

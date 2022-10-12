@@ -6,9 +6,10 @@ import { networkInterfaces } from 'os';
 const getIp = () =>
     Object.values(networkInterfaces())
         .flat()
-        .find(ip => ip.family === 'IPv4' && !ip.internal).address;
+        // Compatible ip.family in Mac OS 12.6 is 'IPv4', in Mac OS 12.3.x is 4
+        .find(ip => (ip.family === 'IPv4' || ip.family === 4) && !ip.internal).address;
 
-const PORT = 7000
+const PORT = 10001
 
 const EVENT_WATCH = '/event_watch'
 

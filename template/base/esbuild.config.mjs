@@ -61,25 +61,26 @@ esbuild.serve({ servedir: './' }, {}).then((result) => {
         const proxyReq = request(url, proxyRes => {
             // If esbuild returns "not found", send a custom 404 page
             if (proxyRes.statusCode === 404) {
-                res.writeHead(404, { 'Content-Type': 'text/html' });
-                res.end('<h1>A custom 404 page</h1>');
+                res.writeHead(404, { 'Content-Type': 'text/html' })
+                res.end('<h1>A custom 404 page</h1>')
                 return;
             }
 
             // Otherwise, forward the response from esbuild to the client
-            res.writeHead(proxyRes.statusCode, proxyRes.headers);
-            proxyRes.pipe(res, { end: true });
+            res.writeHead(proxyRes.statusCode, proxyRes.headers)
+            proxyRes.pipe(res, { end: true })
         });
 
         // Forward the body of the request to esbuild
-        req.pipe(proxyReq, { end: true });
+        req.pipe(proxyReq, { end: true })
     }).listen(PORT)
 
     // Todo console.error(`Port ${port} was in use.\n`)
     const localhost = `http://localhost:${PORT}`
-    console.log('\nServing 🍛\n');
-    console.log(`Local → ${localhost}\n`);
-    console.log(`Network → http://${getIp()}:${PORT}\n`);
+    const network = `http://${getIp()}:${PORT}`
+    console.log('\nServing 🍛\n')
+    console.log(`Local → ${localhost}\n`)
+    console.log(`Network → ${network}\n`)
 
     // Open the default browser only if it is not opened yet
     setTimeout(() => {
@@ -98,7 +99,9 @@ esbuild.serve({ servedir: './' }, {}).then((result) => {
         const cmd = (command, callback) => exec(command, function(error, stdout, stderr){ callback(stdout); })
         cmd('adb install -t app-debug.apk', (r1) => {
             console.log('---', 'install: ' + r1)
-            cmd('adb shell am start -n com.whl.tinyui.sample/com.whl.tinyui.sample.HotReloadActivity', (r2) => {
+            const extraSource = ' -e source ' + '\"' + network + '/' + 'out/index.js' + '\"'
+            const extraWatch = ' -e watch ' + '\"' + network + EVENT_WATCH + '\"'
+            cmd('adb shell am start -n com.whl.tinyui.sample/com.whl.tinyui.sample.HotReloadActivity' + extraSource + extraWatch, (r2) => {
                 console.log('---', 'start: ' + r2)
             })
         })

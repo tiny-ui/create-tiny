@@ -11,6 +11,7 @@
 		"build": "node ./scripts/build.mjs",
 		"dev": "npm run build && node out.js"
 	},
+	"description": "The way to start a tiny project",
 	"author": "Harlon Wang <81813780@qq.com>",
 	"license": "MIT",
 	"homepage": "https://github.com/tiny-ui/create-tiny#readme",

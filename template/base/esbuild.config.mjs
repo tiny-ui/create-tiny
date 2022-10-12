@@ -83,12 +83,13 @@ esbuild.serve({ servedir: './' }, {}).then((result) => {
     console.log(`Local → ${localhost}\n`)
     console.log(`Network → ${network}\n`)
 
+    const cmd = (command, callback) => exec(command, function(error, stdout, stderr){ callback && callback(stdout); })
+
     // Open the default browser only if it is not opened yet
-    setTimeout(() => {
-        const op = { darwin: ['open'], linux: ['xdg-open'], win32: ['cmd', '/c', 'start'] }
-        const ptf = process.platform
-        if (clients.length === 0) spawn(op[ptf][0], [...[op[ptf].slice(1)], localhost])
-    }, 1000)
+    const openBrowser = () => {
+        cmd(`open ${localhost}`)
+    };
+    setTimeout(openBrowser, 1000)
 
     // Install apk to android device.
     // Todo show tips when command error case, such as:
@@ -96,8 +97,7 @@ esbuild.serve({ servedir: './' }, {}).then((result) => {
     // 2. adb devices not found
     // 3. adb devices multiple devices conflicts
     // 4. adb ... with other exception case.
-    setTimeout( () => {
-        const cmd = (command, callback) => exec(command, function(error, stdout, stderr){ callback(stdout); })
+    const installApk = () => {
         cmd('adb install -t app-debug.apk', (r1) => {
             console.log('---', 'install: ' + r1)
             const extraSource = ' -e source ' + '\"' + network + '/' + 'out/index.js' + '\"'
@@ -106,5 +106,6 @@ esbuild.serve({ servedir: './' }, {}).then((result) => {
                 console.log('---', 'start: ' + r2)
             })
         })
-    }, 200)
+    }
+    setTimeout(installApk, 200)
 })

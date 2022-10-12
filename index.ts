@@ -60,7 +60,7 @@ async function init() {
         shouldOverwrite?: string
         packageName?: string
         needsTypeScript?: string
-        needsJsx?: string
+        needsTsx?: string
     } = {}
 
     try {
@@ -107,9 +107,9 @@ async function init() {
                 inactive: 'No'
             },
             {
-                name: 'needsJsx',
-                type: 'toggle',
-                message: 'Add JSX Support?',
+                name: 'needsTsx',
+                type: prev => prev ? 'toggle' : null,
+                message: 'Add TSX Support?',
                 initial: false,
                 active: 'Yes',
                 inactive: 'No'
@@ -128,7 +128,7 @@ async function init() {
         shouldOverwrite,
         packageName = projectName ?? defaultProjectName,
         needsTypeScript,
-        needsJsx
+        needsTsx
     } = result
 
     const cwd = process.cwd()
@@ -155,14 +155,16 @@ async function init() {
     render('base')
 
     // Add configs.
-    if (needsJsx) {
-        render('config/jsx')
+    if (needsTypeScript) {
+        if (needsTsx) {
+            render('config/tsx')
+        }
     }
 
     // Render code template.
     // prettier-ignore
     const codeTemplate =
-        (needsTypeScript ? 'typescript-' : '') + 'default' + (needsJsx ? '-jsx' : '')
+        (needsTypeScript ? 'typescript-' : '') + 'default'
     render(`code/${codeTemplate}`)
 
     // Instructions:

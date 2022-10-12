@@ -1,6 +1,6 @@
 import * as esbuild from 'esbuild'
 import { createServer, request} from "http";
-import { spawn, exec } from 'child_process'
+import { exec } from 'child_process'
 import { networkInterfaces } from 'os';
 
 const getIp = () =>

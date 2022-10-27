@@ -9,8 +9,6 @@ const getIp = () =>
         // Compatible ip.family in Mac OS 12.6 is 'IPv4', in Mac OS 12.3.x is 4
         .find(ip => (ip.family === 'IPv4' || ip.family === 4) && !ip.internal).address;
 
-const PORT = 10001
-
 const EVENT_WATCH = '/event_watch'
 
 const clients = []
@@ -39,7 +37,7 @@ esbuild.serve({ servedir: './' }, {}).then((result) => {
     // The result tells us where esbuild's local server is
     const {host, port} = result
 
-    createServer((req, res) => {
+    const server = createServer((req, res) => {
         // For watch to hot reload.
         if (req.url === EVENT_WATCH) {
             const client = res.writeHead(200, {
@@ -74,11 +72,10 @@ esbuild.serve({ servedir: './' }, {}).then((result) => {
 
         // Forward the body of the request to esbuild
         req.pipe(proxyReq, { end: true })
-    }).listen(PORT)
+    }).listen(0)
 
-    // Todo console.error(`Port ${port} was in use.\n`)
-    const localhost = `http://localhost:${PORT}`
-    const network = `http://${getIp()}:${PORT}`
+    const localhost = `http://localhost:${server.address().port}`
+    const network = `http://${getIp()}:${server.address().port}`
     console.log('\nServing 🍛\n')
     console.log(`Local → ${localhost}\n`)
     console.log(`Network → ${network}\n`)
